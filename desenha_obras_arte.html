@@ -1,0 +1,83 @@
+<meta charset="utf-8">
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    pincel.fillStyle = 'lightblue';
+    pincel.fillRect(0, 0, 600, 400);
+
+    var desenhar = false;
+    var corAtual = "blue";
+    var xVermelho = 0;
+    var xVerde = 50;
+    var xAzul = 100;
+    var yQuadrados = 0;
+    var tamanhoQuadrados = 50;
+    var raio = 10;
+   
+    function desenharQuadrado (x, y, tamanho, cor) {
+        pincel.fillStyle = cor;
+        pincel.fillRect (x, y, tamanho, tamanho);
+        pincel.fill();
+    } 
+
+    function desenharCirculo (x, y, raio, cor) {
+        pincel.fillStyle = cor;
+        pincel.beginPath();
+        pincel.arc (x, y, raio, 0, 2 * Math.PI);
+        pincel.fill();
+    } 
+
+    function desenharPaletaDeCores(){
+        desenharQuadrado (xVermelho, yQuadrados, tamanhoQuadrados, "red");
+        desenharQuadrado (xVerde, yQuadrados, tamanhoQuadrados, "green");
+        desenharQuadrado (xAzul, yQuadrados, tamanhoQuadrados, "blue"); 
+    }
+
+
+    function permitirDesenharNessaArea (x,y){
+        if (x>=0 && x<12*tamanhoQuadrados && y>=0 && y<tamanhoQuadrados){
+            return false;
+        } else{
+            return true;
+        }
+    }
+
+    function lidarComMovintoMouse (evento){
+        var x = evento.pageX - tela.offsetLeft;
+        var y = evento.pageY - tela.offsetTop;
+        if (desenhar && permitirDesenharNessaArea(x, y)){
+            desenharCirculo (x, y, 5, corAtual);
+        }
+
+        if (evento.pageX<=50 && evento.pageY<=50){
+            corAtual = "red";
+        }
+        else if (evento.pageX>50 && evento.pageX<=100 && evento.pageY<=50){
+            corAtual = "green";
+        }
+        else if (evento.pageX>100 && evento.pageX<=150 && evento.pageY<=50){
+            corAtual = "blue";
+        }
+
+    }
+
+    function habilitarDesenhar (){
+        desenhar = true;
+    }
+
+    function desabilitarDesenhar (){
+        desenhar = false;
+    }
+
+    desenharPaletaDeCores();
+    tela.onmousemove = lidarComMovintoMouse;
+    tela.onmousedown = habilitarDesenhar;
+    tela.onmouseup = desabilitarDesenhar;
+
+
+</script>
